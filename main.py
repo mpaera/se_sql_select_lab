@@ -1,39 +1,84 @@
 # STEP 1A
 # Import SQL Library and Pandas
+import sqlite3
+import pandas as pd
+
 
 # STEP 1B
 # Connect to the database
-conn = None
+conn = sqlite3.connect("data.sqlite")
 
 
 # STEP 2
-# Replace None with your code
-df_first_five = None
+# Select employee number and last name
+df_first_five = pd.read_sql_query("""
+    SELECT employeeNumber, lastName
+    FROM employees
+""", conn)
+
 
 # STEP 3
-# Replace None with your code
-df_five_reverse = None
+# Reverse the column order
+df_five_reverse = pd.read_sql_query("""
+    SELECT lastName, employeeNumber
+    FROM employees
+""", conn)
+
 
 # STEP 4
-# Replace None with your code
-df_alias = None
+# Alias employeeNumber as ID
+df_alias = pd.read_sql_query("""
+    SELECT employeeNumber AS ID, lastName
+    FROM employees
+""", conn)
+
 
 # STEP 5
-# Replace None with your code
-df_executive = None
+# Use CASE to identify executives
+df_executive = pd.read_sql_query("""
+    SELECT *,
+        CASE
+            WHEN jobTitle = 'President'
+                OR jobTitle LIKE '%Manager%'
+            THEN 'Executive'
+            ELSE 'Not Executive'
+        END AS role
+    FROM employees
+""", conn)
+
 
 # STEP 6
-# Replace None with your code
-df_name_length = None
+# Calculate the length of the employee's full name
+df_name_length = pd.read_sql_query("""
+    SELECT firstName, lastName,
+           LENGTH(firstName || lastName) AS name_length
+    FROM employees
+""", conn)
+
 
 # STEP 7
-# Replace None with your code
-df_short_title = None
+# Get the first two characters of the job title
+df_short_title = pd.read_sql_query("""
+    SELECT jobTitle,
+           SUBSTR(jobTitle, 1, 2) AS short_title
+    FROM employees
+""", conn)
+
 
 # STEP 8
-# Replace None with your code
-sum_total_price = None
+# Calculate the total price
+sum_total_price = pd.read_sql_query("""
+    SELECT SUM(priceEach) AS total_price
+    FROM orderdetails
+""", conn).values[0]
+
 
 # STEP 9
-# Replace None with your code
-df_day_month_year = None
+# Extract day, month, and year from order date
+df_day_month_year = pd.read_sql_query("""
+    SELECT
+        strftime('%d', orderDate) AS day,
+        strftime('%m', orderDate) AS month,
+        strftime('%Y', orderDate) AS year
+    FROM orders
+""", conn)
